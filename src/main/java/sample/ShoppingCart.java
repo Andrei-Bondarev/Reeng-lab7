@@ -6,11 +6,11 @@ import java.text.*;
 /** Containing items and calculating price. */
 public class ShoppingCart{
 
-    public static enum ItemType { NEW, REGULAR, SECOND_FREE, SALE };
+    public enum ItemType { NEW, REGULAR, SECOND_FREE, SALE };
     /**
      * Container for added items 
      */
-    private List<Item> items = new ArrayList<Item>();
+    private final List<Item> items = new ArrayList<>();
 
     /**
      * Tests all class methods. 
@@ -69,7 +69,7 @@ public class ShoppingCart{
      */
     private List<String[]> convertItemsToTableLines(){
 
-        List<String[]> lines = new ArrayList<String[]>();
+        List<String[]> lines = new ArrayList<>();
         int index = 0;
         for (Item item : items) {
             int discount = calculateDiscount(item.type, item.quantity);
@@ -97,7 +97,7 @@ public class ShoppingCart{
     }
 
     public String getFormattedTicketTable(double total){
-        if (items.size() == 0)
+        if (items.isEmpty())
             return "No items.";
         String[] header = {"#","Item","Price","Quan.","Discount","Total"};
         int[] align = new int[] { 1, -1, 1, 1, 1, 1 };
@@ -178,7 +178,6 @@ public class ShoppingCart{
             case NEW:
                 return 0;
             case REGULAR:
-                discount = 0;
                 break;
             case SECOND_FREE:
                 if (quantity > 1)
@@ -188,21 +187,18 @@ public class ShoppingCart{
                 discount = 70;
                 break;
         }
-        if (discount < 80) {
-            discount += quantity / 10;
-            if (discount > 80)
-                discount = 80;
-        }
+        discount += quantity / 10;
+        if (discount > 80)
+            discount = 80;
         return discount;
     }
     private void appendSeparator(StringBuilder sb, int lineLength){
-        for(int i = 0; i < lineLength; i++)
-            sb.append("\n");
+        sb.append("\n".repeat(Math.max(0, lineLength)));
     }
 
     private void adjustColumnWidth(int[] width, String[] columns){
         for(int i = 0; i < width.length; i++)
-            width[i] = (int) Math.max(width[i], columns[i].length());
+            width[i] = Math.max(width[i], columns[i].length());
     }
 
     private void appendFormattedLine(StringBuilder sb,
